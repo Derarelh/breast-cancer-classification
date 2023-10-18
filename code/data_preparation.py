@@ -35,10 +35,11 @@ class DataPreparation:
         """
 
         # Load dataset
-        df = pd.read_csv(self.data_csv_path, index_col= "Name")
-        df_selected_features = pd.concat([df.iloc[:,self.selected_features_idx], df[['diagnosis']]], axis = 1)
-
-        return df_selected_features
+        df = pd.read_csv(self.data_csv_path, index_col= "id")
+        df_selected = df.iloc[:,self.selected_features_idx]
+        df_selected = df_selected.assign(**{"diagnosis": df_selected.pop("diagnosis")})
+        
+        return df_selected
 
     def split_data(self):
 
@@ -70,3 +71,17 @@ class DataPreparation:
                                                             random_state=RANDOM_STATE)
 
         return X_train, X_test, y_train, y_test
+    
+    
+def main():
+    data_prep = DataPreparation(data_csv_path = "./data/breast-cancer.csv", selected_features_idx=SELECTED_FEATURES_IDX, test_data_size=0.2)
+    df = data_prep.load_dataset()
+    print(df)
+    X_train, X_test, y_train, y_test = data_prep.split_data()
+    print(X_train)
+    print(X_test)
+    print(y_train)
+    print(y_test)
+    
+if __name__ == "__main__":
+    main()
