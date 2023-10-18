@@ -38,6 +38,7 @@ class DataPreparation:
         df = pd.read_csv(self.data_csv_path, index_col= "id")
         df_selected = df.iloc[:,self.selected_features_idx]
         df_selected = df_selected.assign(**{"diagnosis": df_selected.pop("diagnosis")})
+        df_selected['diagnosis'] = df_selected['diagnosis'].map({'B': 0, 'M': 1})
         
         return df_selected
 
